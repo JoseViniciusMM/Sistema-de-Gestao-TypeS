@@ -1,0 +1,25 @@
+{
+  "name": "crud-typescript-sqlite",
+  "version": "1.0.0",
+  "description": "Desenvolver uma aplicação em **TypeScript** com **persistência de dados em SQLite**, aplicando os conceitos aprendidos na disciplina de *Linguagem de Programação* e seguindo **boas práticas de código**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoseViniciusMM/crud-typescript-sqlite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JoseViniciusMM/crud-typescript-sqlite/issues"
+  },
+  "homepage": "https://github.com/JoseViniciusMM/crud-typescript-sqlite#readme",
+  "dependencies": {
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
