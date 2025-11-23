@@ -4,7 +4,7 @@
   "description": "Desenvolver uma aplicação em **TypeScript** com **persistência de dados em SQLite**, aplicando os conceitos aprendidos na disciplina de *Linguagem de Programação* e seguindo **boas práticas de código**.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx index.ts"
   },
   "repository": {
     "type": "git",
