@@ -1,93 +1,68 @@
-import * as sqlite3 from 'sqlite3';
+import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
-import * as bcrypt from 'bcrypt';
-
 
 const DB_PATH = './atividade.db';
 
+// DDL Corrigida (Erros de digitação removidos)
 const DDL = `
-// TABELA USUARIOS
-CREATE TABLE usuarios (
-    id INTERGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    senha TEXT NOT NULL,
-    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP
-)
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        senha TEXT NOT NULL,
+        data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
 
-// TABELA TAREFAS (1:N com USUARIOS)
-CREATE TABLE tarefas (
-    id INTERGER PRIMARY KEY AUTOINCREMENT,
-    usuario_id INTERGER NOT NULL,
-    titulo TEXT NOT NULL,
-    descricao TEXT,
-    status TEXT DEFAULT 'pendente',
-    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREING KEY (usuario_id) REFERENCES usuarios(id)
-)
+    CREATE TABLE IF NOT EXISTS categorias (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT UNIQUE NOT NULL
+    );
 
-// TABELA CATEGORIAS 
-CREATE TABLE categorias (
-    id INTERGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT UNIQUE NOT NULL
-)
+    CREATE TABLE IF NOT EXISTS tarefas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        titulo TEXT NOT NULL,
+        descricao TEXT,
+        status TEXT DEFAULT 'pendente',
+        data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    );
 
-// TABELA TAREFAS_CATEGORIAS (N:N entre TAREFAS e CATEGORIAS)
-CREATE TABLE tarefas_categorias (
-    tarefa_id INTERGER NOT NULL,
-    categoria_id INTERGER NOT NULL,
-    FOREING KEY (tarefa_id) REFERENCES tarefas(id),
-    FOREING KEY (categoria_id) REFERENCES categorias(id),
-    PRIMARY KEY (tarefa_id, categoria_id)
-)
+    CREATE TABLE IF NOT EXISTS tarefas_categorias (
+        tarefa_id INTEGER NOT NULL,
+        categoria_id INTEGER NOT NULL,
+        FOREIGN KEY (tarefa_id) REFERENCES tarefas(id) ON DELETE CASCADE,
+        FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE CASCADE,
+        PRIMARY KEY (tarefa_id, categoria_id)
+    );
 
-// TABELA LOGS DE ATIVIDADES
-CREATE TABLE logs_atividades (
-    id INTERGER PRIMARY KEY AUTOINCREMENT,
-    usuario_id INTERGER NOT NULL,
-    acao TEXT NOT NULL,
-    data_acao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREING KEY (usuario_id) REFERENCES usuarios(id)
-)
+    CREATE TABLE IF NOT EXISTS logs_atividades (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        acao TEXT NOT NULL,
+        data_acao DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    );
 `;
 
 let dbInstance: Database | null = null;
 
 export async function getDatabaseInstance(): Promise<Database> {
     if (dbInstance) {
-        return dbInstance
+        return dbInstance;
     }
+    
     dbInstance = await open({
         filename: DB_PATH,
         driver: sqlite3.Database
     });
 
-
+    // Importante: Habilitar Foreign Keys no SQLite
+    await dbInstance.exec('PRAGMA foreign_keys = ON;');
     await dbInstance.exec(DDL);
-    
-    await dbInstance.run(`INSERT OR IGNORE INTO categororias (id, nome) VALUES (1, 'Trabalho'), (2, 'Pessoal'), (3, 'Urgente')`);
 
-    console.log(`[DB] Banco de dados inicializando e conectando em ${DB_PATH}`);
+    // Seed de categorias básicas
+    await dbInstance.run(`INSERT OR IGNORE INTO categorias (id, nome) VALUES (1, 'Trabalho'), (2, 'Pessoal'), (3, 'Urgente')`);
+
     return dbInstance;
 }
-
-export async function initializeAdminUser() {
-    const db = await getDatabaseInstance();
-    const adminEmail = 'admin@sys.com';
-
-    const adminExists = await db.get(`SELECT id FROM usuarios WHERE email = ?`, [adminEmail]);
-
-    if (!adminExists) {
-        const hashSenha = await bcrypt.hash('admin123', 10);
-        await db.run(`INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)`, [
-            'Administrador',
-            adminEmail,
-            hashSenha
-        ]);
-        console.log('[DB] Usuário administrador criado com email "
-            + adminEmail + '" e senha "admin123"');
-    }   
-}
-
-
-

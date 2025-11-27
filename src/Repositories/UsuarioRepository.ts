@@ -1,24 +1,25 @@
-import {getDatabaseInstance} from '../Database';
-import {Usuario, UsuarioInput} from '../../Models/Usuario';
+import { getDatabaseInstance } from './Database';
+import { Usuario, UsuarioInput } from '../Models/Usuario';
 
 export class UsuarioRepository {
-    private dbPromise = getDatabaseInstance();
-
-    public async findByEmail(email: string): Promise<Usuario | null> {
-        const db = await this.dbPromise;
-        const sql = 'SELECT * FROM usuarios WHERE email = ?';
-        return db.get<Usuario>(sql, [email]) || null;
+    public async findByEmail(email: string): Promise<Usuario | undefined> {
+        const db = await getDatabaseInstance();
+        return await db.get<Usuario>('SELECT * FROM usuarios WHERE email = ?', [email]);
     }
 
-    public async save(usuarioData: UsuarioInput): Promise<Usuario> {
-        const db = await this.dbPromise;
-        const sql = `INSERT INTO usuarios (nome, email, senha, data_criacao)
-                    VALUES (?, ?, ?, datetime('now'))`;
+    public async save(usuario: UsuarioInput): Promise<Usuario> {
+        const db = await getDatabaseInstance();
+        const result = await db.run(
+            `INSERT INTO usuarios (nome, email, senha, data_criacao) VALUES (?, ?, ?, datetime('now'))`,
+            [usuario.nome, usuario.email, usuario.senha]
+        );
 
-        const result = await db.run(sql, [
-            usuarioData.nome,
-            usuarioData.email,
-            usuarioData.senha
-        ]);
-
-        
+        return {
+            id: result.lastID!,
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
+            data_criacao: new Date()
+        };
+    }
+}
