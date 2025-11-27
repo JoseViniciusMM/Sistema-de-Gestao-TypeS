@@ -76,7 +76,8 @@ async function menuPrincipal() {
                 break;
             case '2':
                 const tarefas = await tarefaService.listarTarefas(usuarioLogado.id);
-                console.table(tarefas.map(t => ({ id: t.id, titulo: t.titulo, status: t.status })));
+                // Correção do erro do 't' (implicit any)
+                console.table(tarefas.map((t: any) => ({ id: t.id, titulo: t.titulo, status: t.status })));
                 break;
             case '3':
                 const idConcluir = readlineSync.questionInt("ID da tarefa para concluir: ");
