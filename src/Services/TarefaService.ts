@@ -8,7 +8,6 @@ export class TarefaService {
 
     async criarTarefa(input: TarefaInput): Promise<Tarefa> {
         const tarefa = await this.tarefaRepo.save(input);
-        // Regra de Negócio: Registrar Log Automático
         await this.logRepo.registrar(input.usuario_id, `Criou tarefa ID: ${tarefa.id} - ${tarefa.titulo}`);
         return tarefa;
     }

@@ -19,9 +19,20 @@ export class TarefaRepository {
         } as Tarefa;
     }
 
-    async findAllByUsuario(usuario_id: number): Promise<Tarefa[]> {
+async findAllByUsuario(usuario_id: number): Promise<Tarefa[]> {
         const db = await getDatabaseInstance();
-        const sql = 'SELECT * FROM tarefas WHERE usuario_id = ?';
+        
+        const sql = `
+            SELECT 
+                t.*, 
+                GROUP_CONCAT(c.nome, ', ') as categoria_nome 
+            FROM tarefas t
+            LEFT JOIN tarefas_categorias tc ON t.id = tc.tarefa_id
+            LEFT JOIN categorias c ON tc.categoria_id = c.id
+            WHERE t.usuario_id = ?
+            GROUP BY t.id
+        `;
+        
         return await db.all<Tarefa[]>(sql, [usuario_id]);
     }
 

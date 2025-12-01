@@ -71,7 +71,7 @@ async function menuPrincipal() {
     console.log("4. Excluir Tarefa");
     console.log("-----------------------");
     console.log("5. Vincular Tarefa a uma Categoria"); 
-    console.log("6. Gerenciar Categorias (Criar/Listar/Excluir)");
+    console.log("6. Gerenciar Categorias");
     console.log("-----------------------");
     console.log("0. Logout");
     

@@ -31,10 +31,11 @@ export class TarefaController {
             console.log("Nenhuma tarefa encontrada.");
         } else {
             console.table(tarefas.map((t: any) => ({ 
-                ID: t.id, 
-                Titulo: t.titulo, 
-                Status: t.status 
-            })));
+            ID: t.id, 
+            Titulo: t.titulo, 
+            Status: t.status,
+            Categoria: t.categoria_nome || 'Sem Categoria' // <--- LINHA NOVA
+        })));
         }
     }
 
