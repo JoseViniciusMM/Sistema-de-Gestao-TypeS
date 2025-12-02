@@ -10,7 +10,7 @@ export class TarefaRepository {
              VALUES (?, ?, ?, ?, datetime('now'))`,
             [tarefa.usuario_id, tarefa.titulo, tarefa.descricao || '', tarefa.status || 'pendente']
         );
-        
+
         return {
             id: result.lastID!,
             ...tarefa,
@@ -19,9 +19,9 @@ export class TarefaRepository {
         } as Tarefa;
     }
 
-async findAllByUsuario(usuario_id: number): Promise<Tarefa[]> {
+    async findAllByUsuario(usuario_id: number): Promise<Tarefa[]> {
         const db = await getDatabaseInstance();
-        
+
         const sql = `
             SELECT 
                 t.*, 
@@ -32,21 +32,21 @@ async findAllByUsuario(usuario_id: number): Promise<Tarefa[]> {
             WHERE t.usuario_id = ?
             GROUP BY t.id
         `;
-        
+
         return await db.all<Tarefa[]>(sql, [usuario_id]);
     }
 
-    async updateStatus(id: number, status: string): Promise<boolean> {
+    async updateStatus(usuario_id: number, id: number, status: string): Promise<boolean> {
         const db = await getDatabaseInstance();
-        const sql = 'UPDATE tarefas SET status = ? WHERE id = ?';
-        const result = await db.run(sql, [status, id]);
+        const sql = 'UPDATE tarefas SET status = ? WHERE id = ? AND usuario_id = ?';
+        const result = await db.run(sql, [status, id, usuario_id]);
         return (result.changes || 0) > 0;
     }
 
-    async delete(id: number): Promise<boolean> {
+    async delete(usuario_id: number, id: number): Promise<boolean> {
         const db = await getDatabaseInstance();
-        const sql = 'DELETE FROM tarefas WHERE id = ?';
-        const result = await db.run(sql, [id]);
+        const sql = 'DELETE FROM tarefas WHERE id = ? AND usuario_id = ?';
+        const result = await db.run(sql, [id, usuario_id]);
         return (result.changes || 0) > 0;
     }
 

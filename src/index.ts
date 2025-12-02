@@ -27,7 +27,7 @@ async function menuLogin() {
     console.log("\n--- ÁREA DE LOGIN ---");
     console.log("1. Login");
     console.log("2. Cadastrar Novo Usuário");
-    console.log("3. Sair");
+    console.log("0. Sair");
     const opcao = readlineSync.question("Escolha: ");
 
     try {
@@ -52,7 +52,7 @@ async function menuLogin() {
             await authService.cadastrar({ nome, email, senha });
             console.log("✅ Cadastro realizado com sucesso! Faça login para continuar.");
         } 
-        else if (opcao === '3') {
+        else if (opcao === '0') {
             console.log("Saindo do sistema...");
             process.exit(0);
         }

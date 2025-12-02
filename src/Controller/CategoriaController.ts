@@ -25,8 +25,13 @@ export class CategoriaController {
             case '3':
                 await this.listar();
                 const id = readlineSync.questionInt("ID para excluir: ");
-                await this.service.excluir(id);
-                console.log("🗑️ Categoria excluída. 🗑️");
+                if (id <= 3) {
+                    console.log("❌ Não é possível excluir categorias básicas! ❌");
+                    break;
+                } else {
+                    await this.service.excluir(id);
+                    console.log("🗑️ Categoria excluída. 🗑️");
+                }
                 break;
             case '0':
                 return;
