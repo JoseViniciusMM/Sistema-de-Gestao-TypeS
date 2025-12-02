@@ -3,7 +3,7 @@ export interface Tarefa {
     usuario_id: number;
     titulo: string;
     descricao?: string;
-    status: 'pendente' | 'concluida'; 
+    status: 'pendente' | 'concluida';
     data_criacao: Date;
     categoria_nome?: string;
 }

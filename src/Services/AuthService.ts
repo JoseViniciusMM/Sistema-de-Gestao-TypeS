@@ -13,7 +13,7 @@ export class AuthService {
 
         const hashSenha = await bcrypt.hash(input.senha, 10);
         const novoUsuario = await this.usuarioRepo.save({ ...input, senha: hashSenha });
-        
+
         await this.logRepo.registrar(novoUsuario.id, `Usuário criado: ${novoUsuario.email}`);
         return novoUsuario;
     }

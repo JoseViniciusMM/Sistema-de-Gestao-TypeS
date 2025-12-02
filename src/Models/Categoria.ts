@@ -5,4 +5,4 @@ export interface Categoria {
 
 export interface CategoriaInput {
     nome: string;
-}
+} 

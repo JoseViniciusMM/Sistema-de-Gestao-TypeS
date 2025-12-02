@@ -22,4 +22,4 @@ export class UsuarioRepository {
             data_criacao: new Date()
         };
     }
-}
+} 

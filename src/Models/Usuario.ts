@@ -4,7 +4,7 @@ export interface Usuario {
     email: string;
     senha: string;
     data_criacao: Date;
-}
+} 
 
 export interface UsuarioInput {
     nome: string;

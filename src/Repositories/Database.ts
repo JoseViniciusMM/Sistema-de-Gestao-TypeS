@@ -50,7 +50,7 @@ export async function getDatabaseInstance(): Promise<Database> {
     if (dbInstance) {
         return dbInstance;
     }
-    
+
     dbInstance = await open({
         filename: DB_PATH,
         driver: sqlite3.Database

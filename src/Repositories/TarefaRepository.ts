@@ -1,6 +1,6 @@
 import { getDatabaseInstance } from './Database';
 import { Tarefa, TarefaInput } from '../Models/Tarefa';
-
+ 
 export class TarefaRepository {
 
     async save(tarefa: TarefaInput): Promise<Tarefa> {

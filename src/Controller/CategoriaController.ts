@@ -3,7 +3,7 @@ import { CategoriaService } from '../Services/CategoriaService';
 
 export class CategoriaController {
     private service = new CategoriaService();
-
+ 
     async menu() {
         console.log("\n--- Gestão de Categorias ---");
         console.log("1. Listar Categorias");

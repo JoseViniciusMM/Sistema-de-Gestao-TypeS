@@ -1,4 +1,3 @@
-
 # 🧩 Tema: Sistema de Gestão de Atividades 
 
 Desenvolver uma aplicação em **TypeScript** com **persistência de dados em SQLite**, aplicando os conceitos aprendidos na disciplina de *Linguagem de Programação* e seguindo **boas práticas de código**.

@@ -4,8 +4,8 @@ import { CategoriaInput, Categoria } from '../Models/Categoria';
 export class CategoriaService {
     private repo = new CategoriaRepository();
 
-    async criar(nome: string): Promise<Categoria> {
-        return await this.repo.save({ nome });
+    async criar(nome: CategoriaInput): Promise<Categoria> {
+        return await this.repo.save(nome);
     }
 
     async listar(): Promise<Categoria[]> {

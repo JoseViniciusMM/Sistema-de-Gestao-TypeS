@@ -24,7 +24,7 @@ export class TarefaService {
     }
     return false;
   }
-
+ 
   async excluirTarefa(usuario_id: number, tarefa_id: number): Promise<boolean> {
     const sucesso = await this.tarefaRepo.delete(usuario_id, tarefa_id);
     if (sucesso) {

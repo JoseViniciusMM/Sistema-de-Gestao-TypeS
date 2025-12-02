@@ -9,7 +9,7 @@ export class CategoriaRepository {
             [categoria.nome]
         );
         return { id: result.lastID!, nome: categoria.nome };
-    }
+    } 
 
     async findAll(): Promise<Categoria[]> {
         const db = await getDatabaseInstance();
