@@ -20,13 +20,13 @@ export class CategoriaController {
             case '2':
                 const nome = readlineSync.question("Nome da Categoria: ");
                 await this.service.criar(nome);
-                console.log("✅ Categoria criada! ✅");
+                console.log("  Categoria criada!");
                 break;
             case '3':
                 await this.listar();
                 const id = readlineSync.questionInt("ID para excluir: ");
                 await this.service.excluir(id);
-                console.log("🗑️ Categoria excluída. 🗑️");
+                console.log("  Categoria excluída.  ");
                 break;
             case '0':
                 return;

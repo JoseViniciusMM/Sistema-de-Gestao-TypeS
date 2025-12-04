@@ -17,20 +17,20 @@ export class TarefaService {
     }
 
     async concluirTarefa(usuario_id: number, tarefa_id: number): Promise<void> {
-        const sucesso = await this.tarefaRepo.updateStatus(tarefa_id, 'concluida');
+        const sucesso = await this.tarefaRepo.updateStatus(usuario_id,tarefa_id, 'concluida');
         if (sucesso) {
             await this.logRepo.registrar(usuario_id, `Concluiu tarefa ID: ${tarefa_id}`);
         }
     }
 
     async excluirTarefa(usuario_id: number, tarefa_id: number): Promise<void> {
-        const sucesso = await this.tarefaRepo.delete(tarefa_id);
+        const sucesso = await this.tarefaRepo.delete(usuario_id,tarefa_id);
         if (sucesso) {
             await this.logRepo.registrar(usuario_id, `Excluiu tarefa ID: ${tarefa_id}`);
         }
     }
 
-    async adicionarCategoria(tarefaId: number, categoriaId: number): Promise<void> {
-        await this.tarefaRepo.associarCategoria(tarefaId, categoriaId);
+    async adicionarCategoria(usuario_id: number, tarefaId: number, categoriaId: number): Promise<void> {
+        await this.tarefaRepo.associarCategoria(usuario_id, tarefaId, categoriaId);
     }
 }

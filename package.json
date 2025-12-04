@@ -4,7 +4,7 @@
   "description": "Desenvolver uma aplicação em **TypeScript** com **persistência de dados em SQLite**, aplicando os conceitos aprendidos na disciplina de *Linguagem de Programação* e seguindo **boas práticas de código**.",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx index.ts"
+    "dev": "tsx src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "readline-sync": "^1.4.10",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
-    "tsx": "^4.20.6"
+    "tsx": "^4.21.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

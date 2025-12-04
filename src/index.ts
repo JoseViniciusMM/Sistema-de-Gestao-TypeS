@@ -38,10 +38,10 @@ async function menuLogin() {
             usuarioLogado = await authService.login(email, senha);
             
             if (!usuarioLogado) {
-                console.log("❌ Email ou senha inválidos.");
+                console.log(" Email ou senha inválidos.");
             } else {
                 console.clear();
-                console.log(`✅ Bem-vindo, ${usuarioLogado.nome}!`);
+                console.log(`  Bem-vindo, ${usuarioLogado.nome}!`);
             }
         } 
         else if (opcao === '2') {
@@ -50,7 +50,7 @@ async function menuLogin() {
             const senha = readlineSync.question("Senha: ", { hideEchoBack: true });
             
             await authService.cadastrar({ nome, email, senha });
-            console.log("✅ Cadastro realizado com sucesso! Faça login para continuar.");
+            console.log("  Cadastro realizado com sucesso! Faça login para continuar.");
         } 
         else if (opcao === '3') {
             console.log("Saindo do sistema...");

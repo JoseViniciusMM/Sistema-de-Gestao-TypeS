@@ -17,7 +17,7 @@ export class TarefaController {
                 descricao,
                 status: 'pendente'
             });
-            console.log(`✅ Tarefa "${tarefa.titulo}" criada com sucesso!`);
+            console.log(`  Tarefa "${tarefa.titulo}" criada com sucesso!`);
         } catch (error) {
             console.error("Erro ao criar tarefa.");
         }
@@ -45,7 +45,7 @@ export class TarefaController {
         const id = readlineSync.questionInt("\nDigite o ID da tarefa para concluir: ");
         try {
             await this.service.concluirTarefa(usuario_id, id);
-            console.log("✅ Tarefa marcada como concluída!");
+            console.log("  Tarefa marcada como concluída!");
         } catch (error) {
             console.error("Erro ao atualizar tarefa.");
         }
@@ -57,7 +57,7 @@ export class TarefaController {
         const id = readlineSync.questionInt("\nDigite o ID da tarefa para excluir: ");
         try {
             await this.service.excluirTarefa(usuario_id, id);
-            console.log("🗑️ Tarefa removida com sucesso.");
+            console.log("  Tarefa removida com sucesso.");
         } catch (error) {
             console.error("Erro ao excluir tarefa.");
         }
@@ -74,7 +74,7 @@ export class TarefaController {
         const categorias = await this.categoriaService.listar();
         
         if (categorias.length === 0) {
-            console.log("⚠️ Nenhuma categoria cadastrada. Vá no menu de categorias e crie uma antes.");
+            console.log(" Nenhuma categoria cadastrada. Vá no menu de categorias e crie uma antes.");
             return;
         }
 
@@ -82,8 +82,8 @@ export class TarefaController {
         const categoriaId = readlineSync.questionInt("Digite o ID da Categoria: ");
 
         try {
-            await this.service.adicionarCategoria(tarefaId, categoriaId);
-            console.log("✅ Categoria vinculada com sucesso!");
+            await this.service.adicionarCategoria(usuario_id, tarefaId, categoriaId);
+            console.log("  Categoria vinculada com sucesso!");
         } catch (error) {
             console.error("Erro ao vincular. Verifique se os IDs existem.");
         }
