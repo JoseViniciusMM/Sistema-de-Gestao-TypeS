@@ -1,5 +1,5 @@
 import { getDatabaseInstance } from './Database';
- 
+
 export class LogRepository {
     public async registrar(usuario_id: number, acao: string): Promise<void> {
         const db = await getDatabaseInstance();

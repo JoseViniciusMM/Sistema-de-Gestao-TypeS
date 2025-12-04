@@ -23,6 +23,8 @@ const DDL = `
         titulo TEXT NOT NULL,
         descricao TEXT,
         status TEXT DEFAULT 'pendente',
+        prioridade TEXT DEFAULT 'Baixa',  
+        data_vencimento DATETIME,         
         data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
     );
@@ -56,11 +58,9 @@ export async function getDatabaseInstance(): Promise<Database> {
         driver: sqlite3.Database
     });
 
-    // Importante: Habilitar Foreign Keys no SQLite
     await dbInstance.exec('PRAGMA foreign_keys = ON;');
     await dbInstance.exec(DDL);
 
-    // Seed de categorias básicas
     await dbInstance.run(`INSERT OR IGNORE INTO categorias (id, nome) VALUES (1, 'Trabalho'), (2, 'Pessoal'), (3, 'Urgente')`);
 
     return dbInstance;

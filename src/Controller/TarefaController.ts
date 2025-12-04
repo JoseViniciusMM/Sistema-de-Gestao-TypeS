@@ -1,26 +1,40 @@
 import readlineSync from 'readline-sync';
 import { TarefaService } from '../Services/TarefaService';
 import { CategoriaService } from '../Services/CategoriaService';
+import { Prioridade } from '../Models/Tarefa';
+
 export class TarefaController {
     private service = new TarefaService();
     private categoriaService = new CategoriaService();
 
     async criar(usuario_id: number) {
         console.log("\n--- Nova Tarefa ---");
-        const titulo = readlineSync.question("Titulo: ");
-        const descricao = readlineSync.question("Descricao: ");
+const titulo = readlineSync.question("Titulo: ");
+const descricao = readlineSync.question("Descricao: ");
 
-        try {
-            const tarefa = await this.service.criarTarefa({
-                usuario_id,
-                titulo,
-                descricao,
-                status: 'pendente'
-            });
-            console.log(`✅ Tarefa "${tarefa.titulo}" criada com sucesso!`);
-        } catch (error) {
-            console.error("Erro ao criar tarefa.");
-        }
+
+const prioridades = ['Baixa', 'Media', 'Alta'];
+const indexPrioridade = readlineSync.keyInSelect(prioridades, 'Qual a Prioridade?');
+
+if (indexPrioridade === -1) return; 
+
+const prioridadeEscolhida = Object.values(Prioridade)[indexPrioridade];
+
+const dataVenc = readlineSync.question("Data Vencimento (AAAA-MM-DD) [Enter para pular]: ");
+
+try {
+    const tarefa = await this.service.criarTarefa({
+        usuario_id,
+        titulo,
+        descricao,
+        status: 'pendente',
+        prioridade: prioridadeEscolhida as Prioridade,
+        data_vencimento: dataVenc || undefined
+    });
+    console.log(`✅ Tarefa criada com prioridade ${tarefa.prioridade}!`);
+} catch (error: any) {
+    console.error(`❌ Erro de Regra de Negócio: ${error.message}`);
+}
     }
 
     async listar(usuario_id: number) {
@@ -37,60 +51,49 @@ export class TarefaController {
                 Categoria: t.categoria_nome || 'Sem Categoria'
             })));
         }
+        return tarefas; 
     }
 
     async concluir(usuario_id: number) {
-        const lista = await this.service.listarTarefas(usuario_id);
-        if (lista.length === 0) {
-            console.log("Nenhuma tarefa para concluir.");
-            return;
-        }
-        console.log("\n--- Concluir Tarefa ---");
-        await this.listar(usuario_id);
+        const tarefas = await this.listar(usuario_id);
+        
+        if (tarefas.length === 0) return; 
+
         const id = readlineSync.questionInt("\nDigite o ID da tarefa para concluir: ");
- 
+
         try {
-            const sucesso = await this.service.concluirTarefa(usuario_id, id);
-            if (!sucesso) {
-                console.log("❌ Falha ao concluir a tarefa. Verifique o ID informado.");
-                return;
-            }
+            await this.service.concluirTarefa(usuario_id, id);
             console.log("✅ Tarefa marcada como concluída!");
         } catch (error: any) {
-            console.error("Erro ao atualizar tarefa: ", error.message || error);
+            console.error("Erro ao atualizar tarefa:", error.message || error);
         }
     }
 
     async excluir(usuario_id: number) {
-        const lista = await this.service.listarTarefas(usuario_id);
-        if (lista.length === 0) {
-            console.log("Nenhuma tarefa para excluir.");
-        }
-        console.log("\n--- Excluir Tarefa ---");
-        await this.listar(usuario_id);
+        const tarefas = await this.listar(usuario_id);
+
+        if (tarefas.length === 0) return;
+
         const id = readlineSync.questionInt("\nDigite o ID da tarefa para excluir: ");
         try {
-            const sucesso = await this.service.excluirTarefa(usuario_id, id);
-            if (!sucesso) {
-                console.log("❌ Falha ao excluir a tarefa. Verifique o ID informado.");
-                return;
-            }
+            await this.service.excluirTarefa(usuario_id, id);
             console.log("🗑️ Tarefa excluída com sucesso!");
         } catch (error: any) {
-            console.error("Erro ao excluir tarefa: ", error.message || error);
+            console.error("Erro ao excluir tarefa:", error.message || error);
         }
-
     }
 
     async vincularCategoria(usuario_id: number) {
         console.log("\n--- Vincular Categoria a Tarefa ---");
 
         console.log(">> Escolha a Tarefa:");
-        await this.listar(usuario_id);
-        if ((await this.service.listarTarefas(usuario_id)).length === 0) {
+        const tarefas = await this.listar(usuario_id); 
+        
+        if (tarefas.length === 0) {
             console.log("⚠️ Nenhuma tarefa disponível para vincular. Crie uma tarefa primeiro.");
             return;
         }
+        
         const tarefaId = readlineSync.questionInt("Digite o ID da Tarefa: ");
 
         console.log("\n>> Escolha a Categoria:");
@@ -107,7 +110,7 @@ export class TarefaController {
         try {
             await this.service.adicionarCategoria(tarefaId, categoriaId);
             console.log("✅ Categoria vinculada com sucesso!");
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erro ao vincular. Verifique se os IDs existem.");
         }
     }

@@ -104,8 +104,8 @@ async function menuPrincipal() {
       default:
         console.log("Opção inválida.");
     }
-  } catch (error) {
-    console.error("Erro inesperado no sistema.");
+}   catch (error: any) { 
+    console.error("Erro inesperado no sistema:", error.message || error); 
   }
 }
 

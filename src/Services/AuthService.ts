@@ -7,19 +7,19 @@ export class AuthService {
     private usuarioRepo = new UsuarioRepository();
     private logRepo = new LogRepository();
 
-    async cadastrar(input: UsuarioInput): Promise<Usuario> {
-        const existente = await this.usuarioRepo.findByEmail(input.email);
+    async cadastrar(input: UsuarioInput) {
+        const existente = await this.usuarioRepo.buscarPorEmail(input.email);
         if (existente) throw new Error("Email já cadastrado.");
 
         const hashSenha = await bcrypt.hash(input.senha, 10);
-        const novoUsuario = await this.usuarioRepo.save({ ...input, senha: hashSenha });
-
+        const novoUsuario = await this.usuarioRepo.salvar({ ...input, senha: hashSenha });
+        
         await this.logRepo.registrar(novoUsuario.id, `Usuário criado: ${novoUsuario.email}`);
         return novoUsuario;
     }
 
-    async login(email: string, senha: string): Promise<Usuario | null> {
-        const usuario = await this.usuarioRepo.findByEmail(email);
+    async login(email: string, senha: string) {
+        const usuario = await this.usuarioRepo.buscarPorEmail(email);
         if (!usuario) return null;
 
         const senhaValida = await bcrypt.compare(senha, usuario.senha);

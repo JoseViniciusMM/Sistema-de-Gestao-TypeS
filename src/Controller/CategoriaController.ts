@@ -3,7 +3,7 @@ import { CategoriaService } from '../Services/CategoriaService';
 
 export class CategoriaController {
     private service = new CategoriaService();
- 
+
     async menu() {
         console.log("\n--- Gestão de Categorias ---");
         console.log("1. Listar Categorias");
@@ -17,22 +17,30 @@ export class CategoriaController {
             case '1':
                 await this.listar();
                 break;
+
             case '2':
+                console.log("\n(Regra: Máximo 15 letras, sem símbolos)");
                 const nome = readlineSync.question("Nome da Categoria: ");
-                await this.service.criar(nome);
-                console.log("✅ Categoria criada! ✅");
+                
+                try {
+                    await this.service.criar(nome); 
+                    console.log("✅ Categoria criada!");
+                } catch (error: any) {
+                    console.error("❌ Erro:", error.message);
+                }
                 break;
+
             case '3':
                 await this.listar();
                 const id = readlineSync.questionInt("ID para excluir: ");
-                if (id <= 3) {
-                    console.log("❌ Não é possível excluir categorias básicas! ❌");
-                    break;
-                } else {
+                try {
                     await this.service.excluir(id);
-                    console.log("🗑️ Categoria excluída. 🗑️");
+                    console.log("🗑️ Categoria excluída.");
+                } catch (error: any) {
+                    console.log(`❌ Erro: ${error.message}`);
                 }
                 break;
+
             case '0':
                 return;
             default:
@@ -42,6 +50,10 @@ export class CategoriaController {
 
     async listar() {
         const categorias = await this.service.listar();
-        console.table(categorias);
+        if (categorias.length === 0) {
+            console.log("Nenhuma categoria encontrada.");
+        } else {
+            console.table(categorias);
+        }
     }
 }
