@@ -21,7 +21,6 @@ export class CategoriaService {
         if (existe) {
             throw new Error("Já existe uma categoria com este nome.");
         }
-
         return await this.repo.salvar({ nome: nomeLimpo });
     }
 
@@ -33,6 +32,12 @@ export class CategoriaService {
         if (id <= 3) {
             throw new Error("Não é permitido excluir as categorias padrão do sistema (IDs 1, 2 e 3).");
         }
-        return await this.repo.excluir(id);
+        
+        const sucesso = await this.repo.excluir(id);
+
+        if (!sucesso) {
+            throw new Error(`Falha ao excluir. A categoria ID ${id} não existe.`);
+        }
+        return true;
     }
 }

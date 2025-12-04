@@ -34,16 +34,22 @@ export class TarefaService {
 
     async concluirTarefa(usuario_id: number, tarefa_id: number) {
         const sucesso = await this.tarefaRepo.atualizarStatus(tarefa_id, 'concluida');
-        if (sucesso) {
-            await this.logRepo.registrar(usuario_id, `Concluiu tarefa ID: ${tarefa_id}`);
+        
+        if (!sucesso) {
+            throw new Error(`Tarefa com ID ${tarefa_id} não encontrada.`);
         }
+
+        await this.logRepo.registrar(usuario_id, `Concluiu tarefa ID: ${tarefa_id}`);
     }
 
     async excluirTarefa(usuario_id: number, tarefa_id: number) {
         const sucesso = await this.tarefaRepo.excluir(tarefa_id);
-        if (sucesso) {
-            await this.logRepo.registrar(usuario_id, `Excluiu tarefa ID: ${tarefa_id}`);
+        
+        if (!sucesso) {
+            throw new Error(`Não foi possível excluir. A tarefa ID ${tarefa_id} não existe.`);
         }
+
+        await this.logRepo.registrar(usuario_id, `Excluiu tarefa ID: ${tarefa_id}`);
     }
 
     async adicionarCategoria(tarefaId: number, categoriaId: number) {
